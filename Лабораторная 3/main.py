@@ -1,8 +1,18 @@
 class Book:
     """ Базовый класс книги. """
     def __init__(self, name: str, author: str):
-        self.name = name
-        self.author = author
+        self._name = name
+        self._author = author
+
+    @property
+    def name(self):
+        """Только для чтения."""
+        return self._name
+
+    @property
+    def author(self):
+        """Только для чтения."""
+        return self._author
 
     def __str__(self):
         return f"Книга {self.name}. Автор {self.author}"
@@ -11,21 +21,39 @@ class Book:
         return f"{self.__class__.__name__}(name={self.name!r}, author={self.author!r})"
 
 
-class PaperBook:
+class PaperBook(Book):
     def __init__(self, name: str, author: str, pages: int):
-        self.name = name
-        self.author = author
-        self.pages = pages
+        super().__init__(name, author)
+        self._pages = pages
 
-    def __str__(self):
-        return f"Книга {self.name}. Автор {self.author}"
+    @property
+    def pages(self):
+        return self._pages
+
+    @pages.setter
+    def pages(self, value):
+        if not isinstance(value, int) or value <= 0:
+            raise ValueError("Количество страниц должно быть положительным числом")
+        self._pages = value
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(name={self.name!r}, author={self.author!r}, pages={self.pages!r})"
 
 
-class AudioBook:
+class AudioBook(Book):
     def __init__(self, name: str, author: str, duration: float):
-        self.name = name
-        self.author = author
-        self.duration = duration
+        super().__init__(name, author)
+        self._duration = duration
 
-    def __str__(self):
-        return f"Книга {self.name}. Автор {self.author}"
+    @property
+    def duration(self):
+        return self._duration
+
+    @duration.setter
+    def duration(self, value):
+        if not isinstance(value, (int, float)) or value <= 0:
+            raise ValueError("Длительность аудиофайла должна быть положительным числом")
+        self._duration = float(value)
+
+    def __repr__(self):
+        return f"{self.__class__.__name__}(name={self.name!r}, author={self.author!r}, duration={self.duration!r})"
